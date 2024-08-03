@@ -9,7 +9,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // middleware for file upload
 const fileUpload = require("express-fileupload");
-app.use(fileUpload());
+app.use(fileUpload({
+	useTempFiles: true,
+	tempFileDir: "/imp/"
+}));
 
 // connect db and cloudinary
 require("./config/database.js").dbConnect();
