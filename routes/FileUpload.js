@@ -8,5 +8,6 @@ const { imageUpload, videoUpload, imageReducerUpload, localFileUpload } = requir
 // router.post("/video", videoUpload);
 router.post("/localFileUpload", localFileUpload);
 router.post("/imageUpload", imageUpload);
+router.post("/videoUpload", videoUpload);
 
 module.exports = router;
