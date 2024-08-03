@@ -4,15 +4,16 @@ const File = require("../models/file.js");
 const cloudinary = require("cloudinary").v2;
 
 // upload file to cloudinary
-async function uploadFileToCloudinary(file, folder) {
-    const options = { folder };
-    console.log(file.tempFilePath)
+async function uploadFileToCloudinary(file, folder, quality = 100) {
+	const options = { folder };
+	// console.log(file.tempFilePath);
     options.resource_type = "auto";
-    // console.log(options)
-    // tempFilePath k liye fileUpload m options set krne pdenge brna error ayega
-    return await cloudinary.uploader.upload(file.tempFilePath, options);
+    options.quality = quality;
+    console.log(quality);
+	// console.log(options)
+	// tempFilePath k liye fileUpload m options set krne pdenge brna error ayega
+	return await cloudinary.uploader.upload(file.tempFilePath, options);
 }
-
 
 // localFileUpload handler
 exports.localFileUpload = async (req, res) => {
@@ -42,11 +43,11 @@ exports.imageUpload = async (req, res) => {
 		let { name, tags, email } = req.body;
 
 		// retrieve files
-        let file = req.files.image;
-        // console.log(name);
-        // console.log(tags);
-        // console.log(email);
-        // console.log(file);
+		let file = req.files.image;
+		// console.log(name);
+		// console.log(tags);
+		// console.log(email);
+		// console.log(file);
 
 		// check validation check file type it is supported or not [".jpeg", ".png", ".jgp"]...so on
 
@@ -60,9 +61,9 @@ exports.imageUpload = async (req, res) => {
 			tags,
 			email,
 			imageUrl: response.url,
-        });
-        
-        console.log(data)
+		});
+
+		console.log(data);
 
 		res.status(200).json({
 			success: true,
@@ -75,7 +76,6 @@ exports.imageUpload = async (req, res) => {
 		});
 	}
 };
-
 
 exports.videoUpload = async (req, res) => {
 	try {
@@ -91,11 +91,11 @@ exports.videoUpload = async (req, res) => {
 
 		// check validation check file type it is supported or not ["mp4", "mov"]
 
-        // console.log("first")
+		// console.log("first")
 		// upload video on cloudinary
 		const response = await uploadFileToCloudinary(video, "fileUpload");
-        // console.log("Second")
-        // console.log(response);
+		// console.log("Second")
+		// console.log(response);
 
 		// save details in db
 		const data = await File.create({
@@ -119,3 +119,30 @@ exports.videoUpload = async (req, res) => {
 	}
 };
 
+exports.imageReducerUpload = async (req, res) => {
+	let { name, tags, email } = req.body;
+
+	// retrieve files
+	let image = req.files.image;
+
+	// check validation for image
+
+    // upload on cloud
+    const response = await uploadFileToCloudinary(image, "fileUpload", 30);
+    console.log(response)
+
+	// save details in db
+	const data = await File.create({
+		name,
+		tags,
+		email,
+		imageUrl: response.url,
+	});
+
+	console.log(data);
+
+	res.status(200).json({
+		success: true,
+		message: "Video successfully upload to cloud",
+	});
+};
