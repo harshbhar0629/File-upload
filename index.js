@@ -11,7 +11,6 @@ app.use(express.urlencoded({ extended: true }));
 const fileUpload = require("express-fileupload");
 app.use(fileUpload({
 	useTempFiles: true,
-	tempFileDir: "/imp/"
 }));
 
 // connect db and cloudinary
