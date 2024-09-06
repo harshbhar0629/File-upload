@@ -50,9 +50,8 @@ exports.imageUpload = async (req, res) => {
 		// console.log(file);
 
 		// check validation check file type it is supported or not [".jpeg", ".png", ".jgp"]...so on
-
 		// upload file on cloudinary
-		const response = await uploadVideoToCloudinary(file, "fileUpload");
+		const response = await uploadFileToCloudinary(file, "fileUpload");
 		console.log(response);
 
 		// save details in db
